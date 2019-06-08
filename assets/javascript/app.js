@@ -53,11 +53,11 @@ function initMap() {
     // Map options
     var options = {
         zoom: 12,
-        center: { lat: userLat, lng: userLng }
+        center: { lat: 33.9806, lng: -117.3755 }
     }
 
     // User's location
-    var userLocation = { lat: userLat, lng: userLng };
+    var userLocation = { lat: 33.9749, lng: -117.3375 };
 
     // The map, with options properties
     var map = new google.maps.Map(document.getElementById('map'), options);
