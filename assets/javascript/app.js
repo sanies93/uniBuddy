@@ -14,8 +14,14 @@ firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
 
+// Global variables
 var username = "";
 var destination = "";
+var map, options;
+var currentLocList = [];
+var finalDesList = [];
+var currentContentList = [];
+var finalContentList = [];
 
 $("#submit").on("click", function (event) {
   event.preventDefault();
@@ -36,26 +42,11 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
 
+      // Coordinates of user's location
       var lat = position.coords.latitude;
       var lng = position.coords.longitude;
 
-      // User's location
-      var userLocation = { lat: lat, lng: lng };
-
-      console.log(username);
-      console.log(destination);
-      console.log(userLocation);
-
-      // Marker's info content based on current location or destination
-      var currentLocation = username + "'s Current Location";
-      var finalDestination = username + "'s Destination";
-
-      //Icon used to distinguish location and destination
-      var locationIcon = "assets/images/location.png";
-      var destinationIcon = "assets/images/destin.png";
-
-      addMarker(userLocation, currentLocation, locationIcon);
-
+      // Find coordinates of user's destination
       geocode();
 
       function geocode() {
@@ -66,18 +57,16 @@ function initMap() {
             key: "AIzaSyA09J-N_dhYPY4pfDc-qvbgVb-FdQl1FP8"
           }
         }).then(function (response) {
-          // console.log(response);
-
           // Destination address
           var formattedAddress = response.data.results[0].formatted_address;
-          console.log(formattedAddress);
+
+          // Print formatted address of user's destination to html
+          $("#destination-address").html(formattedAddress);
 
           // Geometry of destination address
           var destinationLat = response.data.results[0].geometry.location.lat;
-          console.log(destinationLat);
 
           var destinationLng = response.data.results[0].geometry.location.lng;
-          console.log(destinationLng);
 
           // Save coordinates
           var location = {
@@ -86,17 +75,9 @@ function initMap() {
           }
 
           var geoDestination = {
-            destinationLat: destinationLat,
-            destinationLng: destinationLng
+            lat: destinationLat,
+            lng: destinationLng
           }
-
-          // Print formatted address of user's destination to html
-          $("#destination-address").html(formattedAddress);
-
-          // 
-          var userDestination = { lat: destinationLat, lng: destinationLng };
-
-          addMarker(userDestination, finalDestination, destinationIcon);
 
           // Push to firebase
           database.ref().push({
@@ -108,29 +89,57 @@ function initMap() {
       }
     });
   }
-
   // Map options
-  var options = {
+  options = {
     zoom: 10,
     center: { lat: 33.9806, lng: -117.3755 }    // Centered on Riverside
   }
 
   // The map, with options properties
-  var map = new google.maps.Map(document.getElementById('map'), options);
-
-  // Add location/destination coordinates, proper icon, and content
-  function addMarker(coords, content, icon) {
-
-    var marker = new google.maps.Marker({ position: coords, map: map, icon: icon});
-
-    var infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-
-    // Opens info box
-    marker.addListener("click", function () {
-      infoWindow.open(map, marker);
-    });
-
-  }
+  map = new google.maps.Map(document.getElementById('map'), options);
 }
+
+// Add location/destination coordinates, proper icon, and content
+function addMarker(coords, content, icon) {
+
+  var marker = new google.maps.Marker({ position: coords, map: map, icon: icon });
+
+  var infoWindow = new google.maps.InfoWindow({
+    content: content
+  });
+
+  // Opens info box
+  marker.addListener("click", function () {
+    infoWindow.open(map, marker);
+  });
+
+}
+
+// Add markers for every user in database
+database.ref().on("child_added", function (snapshot) {
+  var loc = snapshot.val().location;
+  var des = snapshot.val().geoDestination;
+
+  // Marker's info content based on current location or destination
+  var currentLocContent = snapshot.val().username + "'s Current Location";
+  var finalDesContent = snapshot.val().username + "'s Destination";
+
+  // Add all locations to lists
+  currentLocList.push(loc);
+  finalDesList.push(des);
+  console.log(currentLocList);
+
+  // Add info to lists
+  currentContentList.push(currentLocContent);
+  finalContentList.push(finalDesContent);
+
+  //Icon used to distinguish location and destination
+  var locationIcon = "assets/images/location.png";
+  var destinationIcon = "assets/images/destin.png";
+
+  //Loop through the list to add all markers;
+  for (var i=0; i<finalDesList.length; i++) {
+    addMarker(currentLocList[i], currentContentList[i], locationIcon);
+    addMarker(finalDesList[i], finalContentList[i], destinationIcon);
+  }
+});
