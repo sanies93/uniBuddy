@@ -1,12 +1,12 @@
 // Your web app's Firebase configuration
 var firebaseConfig = {
-    apiKey: "AIzaSyBdSxw2CJzYxMVEYutEOvfxiVIDVjK2A6c",
-    authDomain: "unibuddy-123.firebaseapp.com",
-    databaseURL: "https://unibuddy-123.firebaseio.com",
-    projectId: "unibuddy-123",
-    storageBucket: "unibuddy-123.appspot.com",
-    messagingSenderId: "1022486736623",
-    appId: "1:1022486736623:web:025d8078f7fab9db"
+  apiKey: "AIzaSyBdSxw2CJzYxMVEYutEOvfxiVIDVjK2A6c",
+  authDomain: "unibuddy-123.firebaseapp.com",
+  databaseURL: "https://unibuddy-123.firebaseio.com",
+  projectId: "unibuddy-123",
+  storageBucket: "unibuddy-123.appspot.com",
+  messagingSenderId: "1022486736623",
+  appId: "1:1022486736623:web:025d8078f7fab9db"
 };
 
 // Initialize Firebase
@@ -16,66 +16,76 @@ var database = firebase.database();
 
 var username = "";
 var destination = "";
-var userLat;
-var userLng;
-// var location;
+var lat, lng;
 
 $("#submit").on("click", function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    getLocation();
+  // Get user inputs
+  username = $("#username").val().trim();
+  destination = $("#destination").val().trim();
 
-    username = $("#username").val().trim();
-    destination = $("#destination").val().trim();
-    // location = {
-    //     latitude: userLat,
-    //     longitude: userLng
-    // }
+  initMap();
 
-    console.log(username);
-    console.log(destination);
-
-    database.ref().push({
-        username: username,
-        // location: location,
-        destination: destination
-    });
-
-    $("#username").val("");
-    $("#destination").val("");
-
-    initMap();
-
+  // Clear form after submitting 
+  $("#username").val("");
+  $("#destination").val("");
 });
 
 
 function initMap() {
-    // Map options
-    var options = {
-        zoom: 12,
-        center: { lat: 33.9806, lng: -117.3755 }
-    }
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
 
-    // User's location
-    var userLocation = { lat: 33.9749, lng: -117.3375 };
+      lat = position.coords.latitude;
+      lng = position.coords.longitude;
 
-    // The map, with options properties
-    var map = new google.maps.Map(document.getElementById('map'), options);
+      // User's location
+      var userLocation = { lat: lat, lng: lng };
 
-    // The marker, positioned at Uluru
-    var marker = new google.maps.Marker({ position: userLocation, map: map });
+      console.log(username);
+      console.log(destination);
+      console.log(userLocation);
+
+      addMarker(userLocation);
+
+      // Save coordinate
+      var location = {
+        lat: lat,
+        lng: lng
+      }
+
+      // Push to firebase
+      database.ref().push({
+        username: username,
+        location: location,
+        destination: destination
+      })
+    });
+  }
+
+  // Map options
+  var options = {
+    zoom: 10,
+    center: { lat: 33.9806, lng: -117.3755 }    // Centered on Riverside
+  }
+
+  // The map, with options properties
+  var map = new google.maps.Map(document.getElementById('map'), options);
+
+  // Add location/destination coordinates, proper icon, and content
+  function addMarker(coords) {
+
+    var marker = new google.maps.Marker({ position: coords, map: map });
+
+    var infoWindow = new google.maps.InfoWindow({
+      content: '<h6>ME!</h6>'
+    });
+
+    // Opens info box
+    marker.addListener("click", function () {
+      infoWindow.open(map, marker);
+    });
+
+  }
 }
-
-function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-  }
-  
-  function showPosition(position) {
-    userLat = position.coords.latitude;
-    userLng = position.coords.longitude;
-    console.log(userLat, userLng);
-  }
