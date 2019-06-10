@@ -46,7 +46,15 @@ function initMap() {
       console.log(destination);
       console.log(userLocation);
 
-      addMarker(userLocation);
+      // Marker's info content based on current location or destination
+      var currentLocation = username + "'s Current Location";
+      var finalDestination = username + "'s Destination";
+
+      //Icon used to distinguish location and destination
+      var locationIcon = "assets/images/location.png";
+      var destinationIcon = "assets/images/destination.png";
+
+      addMarker(userLocation, currentLocation, locationIcon);
 
       geocode();
 
@@ -64,7 +72,7 @@ function initMap() {
           var formattedAddress = response.data.results[0].formatted_address;
           console.log(formattedAddress);
 
-          // Geometry
+          // Geometry of destination address
           var destinationLat = response.data.results[0].geometry.location.lat;
           console.log(destinationLat);
 
@@ -88,7 +96,7 @@ function initMap() {
           // 
           var userDestination = { lat: destinationLat, lng: destinationLng };
 
-          addMarker(userDestination);
+          addMarker(userDestination, finalDestination, destinationIcon);
 
           // Push to firebase
           database.ref().push({
@@ -111,12 +119,12 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), options);
 
   // Add location/destination coordinates, proper icon, and content
-  function addMarker(coords) {
+  function addMarker(coords, content, icon) {
 
-    var marker = new google.maps.Marker({ position: coords, map: map });
+    var marker = new google.maps.Marker({ position: coords, map: map, icon: icon});
 
     var infoWindow = new google.maps.InfoWindow({
-      content: '<h6>ME!</h6>'
+      content: content
     });
 
     // Opens info box
