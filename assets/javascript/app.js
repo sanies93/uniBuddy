@@ -16,7 +16,6 @@ var database = firebase.database();
 
 var username = "";
 var destination = "";
-var lat, lng;
 
 $("#submit").on("click", function (event) {
   event.preventDefault();
@@ -37,8 +36,8 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
 
-      lat = position.coords.latitude;
-      lng = position.coords.longitude;
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
 
       // User's location
       var userLocation = { lat: lat, lng: lng };
@@ -82,6 +81,14 @@ function initMap() {
             destinationLat: destinationLat,
             destinationLng: destinationLng
           }
+
+          // Print formatted address of user's destination to html
+          $("#destination-address").html(formattedAddress);
+
+          // 
+          var userDestination = { lat: destinationLat, lng: destinationLng };
+
+          addMarker(userDestination);
 
           // Push to firebase
           database.ref().push({
