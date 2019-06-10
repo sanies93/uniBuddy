@@ -52,7 +52,7 @@ function initMap() {
 
       //Icon used to distinguish location and destination
       var locationIcon = "assets/images/location.png";
-      var destinationIcon = "assets/images/dest.png";
+      var destinationIcon = "assets/images/destin.png";
 
       addMarker(userLocation, currentLocation, locationIcon);
 
