@@ -49,18 +49,48 @@ function initMap() {
 
       addMarker(userLocation);
 
-      // Save coordinate
-      var location = {
-        lat: lat,
-        lng: lng
-      }
+      geocode();
 
-      // Push to firebase
-      database.ref().push({
-        username: username,
-        location: location,
-        destination: destination
-      })
+      function geocode() {
+        var location = destination;
+        axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+          params: {
+            address: location,
+            key: "AIzaSyA09J-N_dhYPY4pfDc-qvbgVb-FdQl1FP8"
+          }
+        }).then(function (response) {
+          // console.log(response);
+
+          // Destination address
+          var formattedAddress = response.data.results[0].formatted_address;
+          console.log(formattedAddress);
+
+          // Geometry
+          var destinationLat = response.data.results[0].geometry.location.lat;
+          console.log(destinationLat);
+
+          var destinationLng = response.data.results[0].geometry.location.lng;
+          console.log(destinationLng);
+
+          // Save coordinates
+          var location = {
+            lat: lat,
+            lng: lng
+          }
+
+          var geoDestination = {
+            destinationLat: destinationLat,
+            destinationLng: destinationLng
+          }
+
+          // Push to firebase
+          database.ref().push({
+            username: username,
+            location: location,
+            geoDestination: geoDestination
+          })
+        });
+      }
     });
   }
 
