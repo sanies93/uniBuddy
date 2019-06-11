@@ -23,6 +23,8 @@ var finalDesList = [];
 var currentContentList = [];
 var finalContentList = [];
 
+$("#destination-card").hide();
+
 $("#submit").on("click", function (event) {
   event.preventDefault();
 
@@ -32,12 +34,17 @@ $("#submit").on("click", function (event) {
 
   initMap();
 
+  // calcDistance();
+
+  $("#destination-card").show();
+
   // Clear form after submitting 
   $("#username").val("");
   $("#destination").val("");
+  $("#login").hide();
 });
 
-
+// Load map, use geolocation and geocode to find location and destination coordinates
 function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -138,8 +145,46 @@ database.ref().on("child_added", function (snapshot) {
   var destinationIcon = "assets/images/destin.png";
 
   //Loop through the list to add all markers;
-  for (var i=0; i<finalDesList.length; i++) {
+  for (var i = 0; i < finalDesList.length; i++) {
     addMarker(currentLocList[i], currentContentList[i], locationIcon);
     addMarker(finalDesList[i], finalContentList[i], destinationIcon);
   }
 });
+
+// Calculate distance using distance matrix api
+function calcDistance() {
+  var destinationA = new google.maps.LatLng(55.930385, -3.118425);
+  var destinationB = new google.maps.LatLng(50.087692, 14.421150);
+
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix({
+      origins: [destinationA],
+      destinations: [destinationB],
+      travelMode: 'WALKING',
+      unitSystem: google.maps.UnitSystem.IMPERIAL
+    }, callback);
+}
+
+// Get distance results
+function callback(response, status) {
+  if (status == 'OK') {
+    var origins = response.originAddresses;
+    var destinations = response.destinationAddresses;
+
+    for (var i = 0; i < origins.length; i++) {
+      var results = response.rows[i].elements;
+      for (var j = 0; j < results.length; j++) {
+        var element = results[j];
+        var distance = element.distance.text;
+        var duration = element.duration.text;
+        var from = origins[i];
+        var to = destinations[j];
+      }
+    }
+  }
+  console.log(response);
+  console.log(distance);
+  console.log(duration);
+  console.log(from);
+  console.log(to);
+}
