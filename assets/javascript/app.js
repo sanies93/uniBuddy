@@ -1,4 +1,4 @@
-// Your web app's Firebase configuration
+// Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyBdSxw2CJzYxMVEYutEOvfxiVIDVjK2A6c",
   authDomain: "unibuddy-123.firebaseapp.com",
@@ -18,12 +18,15 @@ var database = firebase.database();
 var username = "";
 var destination = "";
 var map, options;
+var usersList = [];
 var currentLocList = [];
 var finalDesList = [];
 var currentContentList = [];
 var finalContentList = [];
 
 $("#destination-card").hide();
+$("#map-card").hide();
+$("#users-card").hide();
 
 $("#submit").on("click", function (event) {
   event.preventDefault();
@@ -34,9 +37,11 @@ $("#submit").on("click", function (event) {
 
   initMap();
 
-  // calcDistance();
+  calcDistance();
 
   $("#destination-card").show();
+  $("#map-card").show();
+  $("#users-card").show();
 
   // Clear form after submitting 
   $("#username").val("");
@@ -131,6 +136,9 @@ database.ref().on("child_added", function (snapshot) {
   var currentLocContent = snapshot.val().username + "'s Current Location";
   var finalDesContent = snapshot.val().username + "'s Destination";
 
+  //Add users to list
+  usersList.push(snapshot.val().username);
+
   // Add all locations to lists
   currentLocList.push(loc);
   finalDesList.push(des);
@@ -144,10 +152,19 @@ database.ref().on("child_added", function (snapshot) {
   var locationIcon = "assets/images/location.png";
   var destinationIcon = "assets/images/destin.png";
 
-  //Loop through the list to add all markers;
+  $("#users").empty();
+
+  //Loop through the list to add all markers and users in buddies list;
   for (var i = 0; i < finalDesList.length; i++) {
     addMarker(currentLocList[i], currentContentList[i], locationIcon);
     addMarker(finalDesList[i], finalContentList[i], destinationIcon);
+
+    var button = $("<button>");
+    button.text(usersList[i]);
+    button.addClass("buddies");
+    button.attr("tag", usersList[i]);
+    $("#users").append(button );
+    $("#users").append("<br>");
   }
 });
 
@@ -158,11 +175,11 @@ function calcDistance() {
 
   var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix({
-      origins: [destinationA],
-      destinations: [destinationB],
-      travelMode: 'WALKING',
-      unitSystem: google.maps.UnitSystem.IMPERIAL
-    }, callback);
+    origins: [destinationA],
+    destinations: [destinationB],
+    travelMode: 'WALKING',
+    unitSystem: google.maps.UnitSystem.IMPERIAL
+  }, callback);
 }
 
 // Get distance results

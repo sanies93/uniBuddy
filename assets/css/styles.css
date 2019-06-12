@@ -1,3 +1,163 @@
 #map {
   height: 400px;
 }
+
+#users {
+  overflow-y: scroll;
+}
+
+.buddies {
+  background-color: white;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 100%;
+}
+
+header,
+aside,
+article {
+ background: transparent;
+ padding: 0;
+ align-content: center;
+ align-items:  center;
+ font-family: 'Philosopher', sans-serif;
+ margin: 0px;
+
+}
+
+h1{
+ font-size: 65px;
+}
+
+label{
+ font-family: 'Philosopher', sans-serif;
+}
+
+.card-body {
+   background-color: white;
+   animation-duration: 3s;
+   animation-delay: 2s;
+   animation-iteration-count: infinite;
+  /*-- color: white; --*/
+}
+
+body {
+ background: url(http://unsplash.it/1499/1000);
+ background-size: 100%;
+ background-size: cover;
+ background-repeat: no-repeat;
+}
+
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.card-header {
+  width: 100%;
+  background-color: #ec7b73f1;
+  color: white;
+  font-family: 'Philosopher', sans-serif;
+}
+
+.card{
+ width: 100%;
+ text-align: center;
+}
+
+.btn{
+   background-color: #ec7b73f1;
+   color: white;
+   }
+
+.form-control {
+ background-color: transparent
+}
+
+/*------ html and body justified to center --------
+html{
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: center;
+   align-content: center;
+   align-items: center;
+   height:100%;
+   margin: 0;
+   padding: 0;
+   background:#eeeeee;
+}
+
+body {
+   margin: 0;
+   flex: 0 1 auto;
+   align-self: auto;
+   /*recommend 1920 / 1080 max based on usage stats, use 100% to that point
+   width: 100%;
+   max-width: 900px;
+   height: 100%;
+   max-height: 600px;
+   background: #fafafa;
+   -webkit-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+   -moz-box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+   box-shadow: 0px 0px 96px 0px rgba(0,0,0,0.75);
+}----- */
+
+
+/*---------- ribbon affect ---------*/
+
+
+.ribbon {
+   font-size: 40px !important;
+   /* This ribbon is based on a 16px font side and a 24px vertical rhythm. I've used em's to position each element for scalability. If you want to use a different font size you may have to play with the position of the ribbon elements */
+   font-family: 'Lobster', cursive;
+   font-size: 65px;
+   width: 50%;
+
+   position: relative;
+   background: #efaa99;
+   color: #fff;
+   text-align: center;
+   padding: 1em 2em; /* Adjust to suit */
+   margin: 2em auto 3em; /* Based on 24px vertical rhythm. 48px bottom margin - normally 24 but the ribbon 'graphics' take up 24px themselves so we double it. */
+}
+.ribbon:before, .ribbon:after {
+   content: "";
+   position: absolute;
+   display: block;
+   bottom: -1em;
+   border: 1.5em solid #eb9c88;
+   z-index: -1;
+}
+.ribbon:before {
+   left: -2em;
+   border-right-width: 1.5em;
+   border-left-color: transparent;
+}
+  .ribbon:after {
+   right: -2em;
+   border-left-width: 1.5em;
+   border-right-color: transparent;
+  }
+  .ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
+   content: "";
+   position: absolute;
+   display: block;
+   border-style: solid;
+   border-color: #ec7b73f1 transparent transparent transparent;
+   bottom: -1em;
+  }
+  .ribbon .ribbon-content:before {
+   left: 0;
+   border-width: 1em 0 0 1em;
+  }
+  .ribbon .ribbon-content:after {
+   right: 0;
+   border-width: 1em 1em 0 0;
+  }

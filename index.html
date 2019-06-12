@@ -10,12 +10,19 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Philosopher&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
+
+  <header>
+    <h1 class="ribbon">
+      <strong class="ribbon-content animated shake">uniBuddy</strong>
+    </h1>
+  </header>
 
   <div class="container">
     <div class="row">
@@ -53,16 +60,37 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12">
-        <div id="map"></div>
+      <div class="col-md-9">
+        <div class="card mb-4" id="map-card">
+          <div class="card-header">Locate Buddies on a Map</div>
+          <div class="card-body">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card mb-4" id="users-card">
+          <div class="card-header">Buddies Online</div>
+          <div class="card-body">
+            <div id="users"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <footer>
+    <div class="card">
+      <div class="card-header"><a href="https://github.com/sanies93/uniBuddy" class="stretched-link">Nefertiti©</a></div>
+    </div>
+  </footer>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="assets/javascript/app.js"></script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA09J-N_dhYPY4pfDc-qvbgVb-FdQl1FP8" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA09J-N_dhYPY4pfDc-qvbgVb-FdQl1FP8" async
+    defer></script>
 
 
 </body>
