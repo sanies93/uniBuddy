@@ -16,9 +16,11 @@ var database = firebase.database();
 
 // Global variables
 var username = "";
+var contact = "";
 var destination = "";
 var map, options;
 var usersList = [];
+var contactList = [];
 var currentLocList = [];
 var finalDesList = [];
 var currentContentList = [];
@@ -33,6 +35,7 @@ $("#submit").on("click", function (event) {
 
   // Get user inputs
   username = $("#username").val().trim();
+  contact = $("#contact").val().trim();
   destination = $("#destination").val().trim();
 
   initMap();
@@ -45,6 +48,7 @@ $("#submit").on("click", function (event) {
 
   // Clear form after submitting 
   $("#username").val("");
+  $("#contact").val("");
   $("#destination").val("");
   $("#login").hide();
 });
@@ -94,6 +98,7 @@ function initMap() {
           // Push to firebase
           database.ref().push({
             username: username,
+            contact: contact,
             location: location,
             geoDestination: geoDestination
           })
@@ -131,6 +136,8 @@ function addMarker(coords, content, icon) {
 database.ref().on("child_added", function (snapshot) {
   var loc = snapshot.val().location;
   var des = snapshot.val().geoDestination;
+  var id = snapshot.key;
+  console.log(id);
 
   // Marker's info content based on current location or destination
   var currentLocContent = snapshot.val().username + "'s Current Location";
@@ -138,6 +145,7 @@ database.ref().on("child_added", function (snapshot) {
 
   //Add users to list
   usersList.push(snapshot.val().username);
+  contactList.push(snapshot.val().contact);
 
   // Add all locations to lists
   currentLocList.push(loc);
@@ -160,12 +168,34 @@ database.ref().on("child_added", function (snapshot) {
     addMarker(finalDesList[i], finalContentList[i], destinationIcon);
 
     var button = $("<button>");
-    button.text(usersList[i]);
+    button.html(usersList[i] + "<br>" + contactList[i]);
     button.addClass("buddies");
     button.attr("tag", usersList[i]);
-    $("#users").append(button );
+    button.attr("data-toggle", "modal");
+    button.attr("data-target", "#exampleModal");
+    $("#users").append(button);
     $("#users").append("<br>");
   }
+});
+
+// Remove user
+$(document).on("click", ".buddies", function () {
+  var removeUser = $(this).attr("tag");
+  console.log(removeUser);
+  $(document).on("click", "#close", function() {
+    removeUser = "";
+  });
+  $(document).on("click", "#arrived", function () {
+    document.location.reload();
+    
+    database.ref().on("child_added", function (snapshot) {
+      users = snapshot.val();
+      if (removeUser === users.username) {
+        var key = snapshot.key;
+        database.ref().child(key).remove();
+      }
+    });
+  });
 });
 
 // Calculate distance using distance matrix api

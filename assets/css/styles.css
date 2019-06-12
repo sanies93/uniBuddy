@@ -60,6 +60,10 @@ footer {
   margin-bottom: 0;
 }
 
+a {
+  color: white;
+}
+
 .card-header {
   width: 100%;
   background-color: #ec7b73f1;
