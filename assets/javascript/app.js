@@ -16,6 +16,7 @@ var database = firebase.database();
 
 // Global variables
 var username = "";
+var password = "";
 var contact = "";
 var destination = "";
 var map, options;
@@ -35,6 +36,7 @@ $("#submit").on("click", function (event) {
 
   // Get user inputs
   username = $("#username").val().trim();
+  password = $("#password").val().trim();
   contact = $("#contact").val().trim();
   destination = $("#destination").val().trim();
 
@@ -98,6 +100,7 @@ function initMap() {
           // Push to firebase
           database.ref().push({
             username: username,
+            password: password,
             contact: contact,
             location: location,
             geoDestination: geoDestination
@@ -137,7 +140,6 @@ database.ref().on("child_added", function (snapshot) {
   var loc = snapshot.val().location;
   var des = snapshot.val().geoDestination;
   var id = snapshot.key;
-  console.log(id);
 
   // Marker's info content based on current location or destination
   var currentLocContent = snapshot.val().username + "'s Current Location";
@@ -150,7 +152,6 @@ database.ref().on("child_added", function (snapshot) {
   // Add all locations to lists
   currentLocList.push(loc);
   finalDesList.push(des);
-  console.log(currentLocList);
 
   // Add info to lists
   currentContentList.push(currentLocContent);
@@ -182,18 +183,25 @@ database.ref().on("child_added", function (snapshot) {
 $(document).on("click", ".buddies", function () {
   var removeUser = $(this).attr("tag");
   console.log(removeUser);
-  $(document).on("click", "#close", function() {
+  $(document).on("click", "#close", function () {
     removeUser = "";
   });
   $(document).on("click", "#arrived", function () {
-    document.location.reload();
-    
-    database.ref().on("child_added", function (snapshot) {
-      users = snapshot.val();
-      if (removeUser === users.username) {
-        var key = snapshot.key;
-        database.ref().child(key).remove();
-      }
+    // Prompt for password
+    brompt('Enter your password to continue with logging out', function (val) {
+      var passwordCheck = val;
+
+      database.ref().on("child_added", function (snapshot) {
+        users = snapshot.val();
+
+        if (removeUser === users.username && passwordCheck === users.password) {
+          document.location.reload();
+          var key = snapshot.key;
+          database.ref().child(key).remove();
+        } else {
+          blurt('Error','Incorrect Password!', 'error');
+        }
+      });
     });
   });
 });
