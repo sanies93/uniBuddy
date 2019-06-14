@@ -40,20 +40,30 @@ $("#submit").on("click", function (event) {
   contact = $("#contact").val().trim();
   destination = $("#destination").val().trim();
 
-  initMap();
-
-  calcDistance();
-
-  $("#destination-card").show();
-  $("#map-card").show();
-  $("#users-card").show();
-
-  // Clear form after submitting 
-  $("#username").val("");
-  $("#contact").val("");
-  $("#destination").val("");
-  $("#login").hide();
+  submitform();
 });
+
+// Force the user to input their information.
+function submitform() {
+  if (username === "" || password === "" || contact === "" || destination === "") {
+    $('#formModal').modal('show');
+  }
+  else {
+    initMap();
+
+    calcDistance();
+
+    $("#destination-card").show();
+    $("#map-card").show();
+    $("#users-card").show();
+
+    // Clear form after submitting 
+    $("#username").val("");
+    $("#contact").val("");
+    $("#destination").val("");
+    $("#login").hide();
+  }
+}
 
 // Load map, use geolocation and geocode to find location and destination coordinates
 function initMap() {
@@ -199,7 +209,7 @@ $(document).on("click", ".buddies", function () {
           var key = snapshot.key;
           database.ref().child(key).remove();
         } else {
-          blurt('Error','Incorrect Password!', 'error');
+          blurt('Error', 'Incorrect Password!', 'error');
         }
       });
     });

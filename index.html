@@ -12,7 +12,7 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/blurt.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Philosopher&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lobster|Philosopher|Raleway&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -27,38 +27,40 @@
   </header>
 
   <div class="container">
+
     <div class="row">
       <div class="col-md-12">
-        <div class="card mb-4" id="login">
-          <div class="card-header">Enter Your Information!</div>
-          <div class="card-body">
-            <form>
-              <div class="form-group">
-                <label for="username">Username</label>
-                <input class="form-control" id="username" type="text" placeholder="John Smith" required />
-              </div>
-
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input class="form-control" id="password" type="password" placeholder="******" required />
-              </div>
-
-              <div class="form-group">
-                <label for="contact">Contact Information</label>
-                <input class="form-control" id="contact" type="text" placeholder="909-123-4567" required />
-              </div>
-
-              <div class="form-group">
-                <label for="destination">Destination</label>
-                <input class="form-control" id="destination" type="text" placeholder="Disneyland" required />
-              </div>
-
-              <button class="btn btn-block" id="submit">Submit</button>
-            </form>
-          </div>
+        <div class="login-form" id="login">
+          <form>
+            <div class="avatar">
+              <img src="assets/images/Logo.png" alt="Avatar">
+            </div>
+            <h2 class="text-center">User Login</h2>
+            <div class="form-group">
+              <input type="text" class="form-control" name="username" id="username" placeholder="Username"
+                required="required">
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                required="required">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="contact" id="contact" placeholder="Contact Info"
+                required="required">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="destination" id="destination" placeholder="Destination"
+                required="required">
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">Sign in</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+
+    <br><br>
 
     <div class="row">
       <div class="col-md-12">
@@ -91,10 +93,10 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modals -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Did You Arrive to Your Destination?</h5>
@@ -108,6 +110,23 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" id="close" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" id="arrived" data-dismiss="modal">Arrived</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" data-show="true"
+      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please Provide All User Information! </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
