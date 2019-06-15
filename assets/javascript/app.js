@@ -193,12 +193,16 @@ database.ref().on("child_added", function (snapshot) {
     $("#users").append("<br>");
   }
 
+  $("#distance-alert").empty();   // Clear last user's distance card
+  $("#distance").empty();   // Clear last user's distance card
+
   calcDistance();
 
   // Calculate distance using distance matrix api
   function calcDistance() {
 
-    $("#distance").empty();   // Clear last user's distance card
+    // $("#distance-alert").empty();   // Clear last user's distance card
+    // $("#distance").empty();   // Clear last user's distance card
 
     var destALat = snapshot.val().geoDestination.lat;
     var destALng = snapshot.val().geoDestination.lng;
@@ -214,7 +218,6 @@ database.ref().on("child_added", function (snapshot) {
         destBLatList.push(destBLat);
         destBLngList.push(destBLng);
 
-        console.log(destBLatList, destBLngList);
         var destinationB = new google.maps.LatLng(destBLat, destBLng);
 
         var service = new google.maps.DistanceMatrixService();
@@ -251,10 +254,17 @@ database.ref().on("child_added", function (snapshot) {
       console.log(from);
       console.log(to);
 
-      var intDistance = parseInt(distance);
-      if (intDistance <= 10) {
+      intDistance = distance.split(',').join("");
+      var newIntDistance = parseInt(intDistance);
+      console.log(newIntDistance);
+      if (newIntDistance <= 10) {
         console.log(snapshot.val().username + " is headed to the same destination!");
-        $("#distance").html("Found a buddy heading to " + to + ". Distance is " + distance + ", and duration is " + duration);
+        $("#distance-alert").html("Found a buddy heading to a location near your destination!");
+        $("#distance").html("Disance: " + distance + "<br>" + "Duration: " + duration);
+      } 
+      else {
+        $("#distance-alert").html("Sorry, no buddies found heading near your destination.");
+        $("#distance").html("Disance: N/A" + "<br>" + "Duration: N/A");
       }
     }
 
@@ -289,4 +299,3 @@ $(document).on("click", ".buddies", function () {
   });
 });
 
-console.log(parseInt("43 mi"));
