@@ -26,8 +26,10 @@ var currentLocList = [];
 var finalDesList = [];
 var currentContentList = [];
 var finalContentList = [];
+var distance;
 
 $("#destination-card").hide();
+$("#distance-card").hide();
 $("#map-card").hide();
 $("#users-card").hide();
 
@@ -51,9 +53,10 @@ function submitform() {
   else {
     initMap();
 
-    calcDistance();
+    // calcDistance();
 
     $("#destination-card").show();
+    $("#distance-card").show();
     $("#map-card").show();
     $("#users-card").show();
 
@@ -113,7 +116,8 @@ function initMap() {
             password: password,
             contact: contact,
             location: location,
-            geoDestination: geoDestination
+            geoDestination: geoDestination,
+            formattedAddress: formattedAddress
           })
         });
       }
@@ -147,6 +151,7 @@ function addMarker(coords, content, icon) {
 
 // Add markers for every user in database
 database.ref().on("child_added", function (snapshot) {
+
   var loc = snapshot.val().location;
   var des = snapshot.val().geoDestination;
   var id = snapshot.key;
@@ -187,6 +192,74 @@ database.ref().on("child_added", function (snapshot) {
     $("#users").append(button);
     $("#users").append("<br>");
   }
+
+  calcDistance();
+
+  // Calculate distance using distance matrix api
+  function calcDistance() {
+
+    $("#distance").empty();   // Clear last user's distance card
+
+    var destALat = snapshot.val().geoDestination.lat;
+    var destALng = snapshot.val().geoDestination.lng;
+    var destinationA = new google.maps.LatLng(destALat, destALng);
+
+    var destBLatList = [];
+    var destBLngList = [];
+    if (finalDesList.length > 1) {
+      for (var i = 0; i < finalDesList.length - 1; i++) {
+        var destBLat = finalDesList[i].lat;
+        var destBLng = finalDesList[i].lng;
+
+        destBLatList.push(destBLat);
+        destBLngList.push(destBLng);
+
+        console.log(destBLatList, destBLngList);
+        var destinationB = new google.maps.LatLng(destBLat, destBLng);
+
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix({
+          origins: [destinationA],
+          destinations: [destinationB],
+          travelMode: 'DRIVING',
+          unitSystem: google.maps.UnitSystem.IMPERIAL
+        }, callback);
+
+      }
+
+    }
+
+    // Get distance results
+    function callback(response, status) {
+      if (status == 'OK') {
+        var origins = response.originAddresses;
+        var destinations = response.destinationAddresses;
+
+        for (var i = 0; i < origins.length; i++) {
+          var results = response.rows[i].elements;
+          for (var j = 0; j < results.length; j++) {
+            var element = results[j];
+            var distance = element.distance.text;
+            var duration = element.duration.text;
+            var from = origins[i];
+            var to = destinations[j];
+          }
+        }
+      }
+      console.log(distance);
+      console.log(duration);
+      console.log(from);
+      console.log(to);
+
+      var intDistance = parseInt(distance);
+      if (intDistance <= 10) {
+        console.log(snapshot.val().username + " is headed to the same destination!");
+        $("#distance").html("Found a buddy heading to " + to + ". Distance is " + distance + ", and duration is " + duration);
+      }
+    }
+
+  }
+
 });
 
 // Remove user
@@ -216,40 +289,4 @@ $(document).on("click", ".buddies", function () {
   });
 });
 
-// Calculate distance using distance matrix api
-function calcDistance() {
-  var destinationA = new google.maps.LatLng(55.930385, -3.118425);
-  var destinationB = new google.maps.LatLng(50.087692, 14.421150);
-
-  var service = new google.maps.DistanceMatrixService();
-  service.getDistanceMatrix({
-    origins: [destinationA],
-    destinations: [destinationB],
-    travelMode: 'WALKING',
-    unitSystem: google.maps.UnitSystem.IMPERIAL
-  }, callback);
-}
-
-// Get distance results
-function callback(response, status) {
-  if (status == 'OK') {
-    var origins = response.originAddresses;
-    var destinations = response.destinationAddresses;
-
-    for (var i = 0; i < origins.length; i++) {
-      var results = response.rows[i].elements;
-      for (var j = 0; j < results.length; j++) {
-        var element = results[j];
-        var distance = element.distance.text;
-        var duration = element.duration.text;
-        var from = origins[i];
-        var to = destinations[j];
-      }
-    }
-  }
-  console.log(response);
-  console.log(distance);
-  console.log(duration);
-  console.log(from);
-  console.log(to);
-}
+console.log(parseInt("43 mi"));
