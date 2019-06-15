@@ -260,12 +260,8 @@ database.ref().on("child_added", function (snapshot) {
       if (newIntDistance <= 10) {
         console.log(snapshot.val().username + " is headed to the same destination!");
         $("#distance-alert").html("Found a buddy heading to a location near your destination!");
-        $("#distance").html("Disance: " + distance + "<br>" + "Duration: " + duration);
+        $("#distance").html("Distance: " + distance + "<br>" + "Duration: " + duration);
       } 
-      // else {
-      //   $("#distance-alert").html("Sorry, no buddies found heading near your destination.");
-      //   $("#distance").html("Disance: N/A" + "<br>" + "Duration: N/A");
-      // }
     }
 
   }
