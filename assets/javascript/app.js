@@ -262,10 +262,10 @@ database.ref().on("child_added", function (snapshot) {
         $("#distance-alert").html("Found a buddy heading to a location near your destination!");
         $("#distance").html("Disance: " + distance + "<br>" + "Duration: " + duration);
       } 
-      else {
-        $("#distance-alert").html("Sorry, no buddies found heading near your destination.");
-        $("#distance").html("Disance: N/A" + "<br>" + "Duration: N/A");
-      }
+      // else {
+      //   $("#distance-alert").html("Sorry, no buddies found heading near your destination.");
+      //   $("#distance").html("Disance: N/A" + "<br>" + "Duration: N/A");
+      // }
     }
 
   }
